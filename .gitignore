@@ -1,0 +1,20 @@
+# Dependencies - restore with "npm install" inside android-build/
+node_modules/
+
+# Built APKs. A binary committed once stays in history forever, so share
+# builds as a GitHub Release instead. android-build/build-apk.bat makes them.
+*.apk
+*.aab
+
+# Signing material
+*.jks
+*.keystore
+
+# OS / editor
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+
+# Gradle output, local.properties and Capacitor's copied web assets are
+# already ignored by android-build/android/.gitignore.

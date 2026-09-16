@@ -1,0 +1,407 @@
+<meta charset="utf-8">
+<title>Tower Rush Build Log</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=JetBrains+Mono:wght@400;500;700&display=swap">
+
+<style>
+/* ==========================================================================
+   Tokens. Cool slate ground so the one amber accent - taken from the game's
+   own gold - is the only warm thing on the page.
+   ========================================================================== */
+:root{
+  --ground:#F7F8FA;
+  --surface:#FFFFFF;
+  --ink:#191D21;
+  --ink-soft:#5A6472;
+  --ink-faint:#8B94A3;
+  --rule:#E2E6EC;
+  --rule-soft:#EDF0F4;
+  --accent:#B26A00;
+  --accent-soft:#F3E6D0;
+  --fixed:#1F6B45;
+  --fixed-soft:#E2F0E8;
+  --flag:#A8321F;
+  --flag-soft:#F6E3DF;
+
+  --fd:"Bricolage Grotesque","Helvetica Neue",Helvetica,Arial,sans-serif;
+  --fb:"Source Serif 4",Georgia,"Times New Roman",serif;
+  --fm:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --ground:#12151A;
+    --surface:#191D24;
+    --ink:#E8EBEF;
+    --ink-soft:#97A1B0;
+    --ink-faint:#6C7686;
+    --rule:#262C35;
+    --rule-soft:#1E232B;
+    --accent:#F2A93B;
+    --accent-soft:#33281A;
+    --fixed:#5FC08D;
+    --fixed-soft:#17281F;
+    --flag:#F08A75;
+    --flag-soft:#2C1C19;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#12151A;
+  --surface:#191D24;
+  --ink:#E8EBEF;
+  --ink-soft:#97A1B0;
+  --ink-faint:#6C7686;
+  --rule:#262C35;
+  --rule-soft:#1E232B;
+  --accent:#F2A93B;
+  --accent-soft:#33281A;
+  --fixed:#5FC08D;
+  --fixed-soft:#17281F;
+  --flag:#F08A75;
+  --flag-soft:#2C1C19;
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;background:var(--ground);color:var(--ink);
+  font-family:var(--fb);font-size:17px;line-height:1.62;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1000px;margin:0 auto;padding:clamp(28px,5vw,72px) clamp(18px,4vw,44px) 96px}
+
+/* ---------- masthead ---------- */
+.eyebrow{
+  font-family:var(--fm);font-size:11px;font-weight:500;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--accent);margin:0 0 16px;
+}
+h1{
+  font-family:var(--fd);font-weight:800;letter-spacing:-.02em;line-height:1.02;
+  font-size:clamp(34px,5.4vw,54px);margin:0;text-wrap:balance;
+}
+.standfirst{
+  font-size:clamp(17px,1.9vw,20px);color:var(--ink-soft);max-width:60ch;
+  margin:18px 0 0;line-height:1.55;
+}
+.meta{
+  display:flex;flex-wrap:wrap;gap:10px;margin:26px 0 0;padding:0;list-style:none;
+}
+.meta li{
+  font-family:var(--fm);font-size:11.5px;color:var(--ink-soft);
+  border:1px solid var(--rule);border-radius:999px;padding:5px 12px;background:var(--surface);
+}
+.meta b{color:var(--ink);font-weight:700}
+.readnote{
+  margin:26px 0 0;padding:14px 18px;border-left:2px solid var(--accent);
+  background:var(--accent-soft);border-radius:0 8px 8px 0;
+  font-size:15px;color:var(--ink-soft);max-width:68ch;
+}
+
+/* ---------- the seven days ---------- */
+.log{margin-top:clamp(40px,6vw,72px);display:flex;flex-direction:column}
+.day{
+  display:grid;grid-template-columns:minmax(84px,132px) 1fr;
+  gap:clamp(18px,3vw,40px);
+  padding:clamp(26px,3.6vw,40px) 0;
+  border-top:1px solid var(--rule);
+}
+.day:first-child{border-top:2px solid var(--ink)}
+
+.rail{position:relative}
+.daynum{
+  font-family:var(--fd);font-weight:800;font-size:clamp(40px,6vw,62px);
+  line-height:.9;color:var(--accent);letter-spacing:-.03em;
+  font-variant-numeric:tabular-nums;
+}
+.daylabel{
+  font-family:var(--fm);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--ink-faint);margin-top:8px;
+}
+
+.body h2{
+  font-family:var(--fd);font-weight:600;font-size:clamp(21px,2.5vw,27px);
+  line-height:1.18;margin:0 0 4px;letter-spacing:-.01em;text-wrap:balance;
+}
+.theme{
+  font-family:var(--fm);font-size:11.5px;letter-spacing:.05em;color:var(--ink-faint);
+  margin:0 0 18px;
+}
+.body p{margin:0 0 14px;max-width:66ch}
+.body p:last-child{margin-bottom:0}
+.body strong{font-weight:600}
+code{
+  font-family:var(--fm);font-size:.86em;background:var(--rule-soft);
+  padding:1.5px 5px;border-radius:4px;color:var(--ink);
+}
+
+/* findings: the measured results, pulled out of the prose */
+.findings{
+  margin:18px 0 0;border:1px solid var(--rule);border-radius:10px;
+  background:var(--surface);overflow:hidden;
+}
+.findings .fhead{
+  font-family:var(--fm);font-size:10px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--ink-faint);padding:9px 16px;border-bottom:1px solid var(--rule);
+  background:var(--rule-soft);
+}
+.frow{
+  display:grid;grid-template-columns:1fr auto;gap:14px;align-items:baseline;
+  padding:9px 16px;border-top:1px solid var(--rule-soft);
+}
+.frow:first-of-type{border-top:0}
+.frow span{font-family:var(--fb);font-size:14.5px;color:var(--ink-soft);line-height:1.4}
+.frow b{
+  font-family:var(--fm);font-size:13px;font-weight:500;color:var(--ink);
+  font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap;
+}
+
+.tags{display:flex;flex-wrap:wrap;gap:7px;margin:16px 0 0}
+.tag{
+  font-family:var(--fm);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;
+  padding:4px 10px;border-radius:5px;font-weight:500;
+}
+.tag.fixed{color:var(--fixed);background:var(--fixed-soft)}
+.tag.flag{color:var(--flag);background:var(--flag-soft)}
+.tag.ship{color:var(--accent);background:var(--accent-soft)}
+
+/* ---------- close ---------- */
+.close{
+  margin-top:clamp(40px,6vw,64px);padding-top:28px;border-top:2px solid var(--ink);
+}
+.close h2{
+  font-family:var(--fd);font-weight:600;font-size:22px;margin:0 0 16px;
+}
+.tally{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:1px;
+  background:var(--rule);border:1px solid var(--rule);border-radius:10px;overflow:hidden;
+}
+.tally div{background:var(--surface);padding:16px 18px}
+.tally dt{
+  font-family:var(--fm);font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--ink-faint);margin:0 0 7px;
+}
+.tally dd{
+  margin:0;font-family:var(--fd);font-weight:600;font-size:25px;color:var(--ink);
+  font-variant-numeric:tabular-nums;line-height:1.1;
+}
+.tally dd em{font-style:normal;font-family:var(--fb);font-size:14px;color:var(--ink-soft);font-weight:400}
+.close p{max-width:66ch;color:var(--ink-soft);margin:20px 0 0;font-size:16px}
+
+@media (max-width:620px){
+  .day{grid-template-columns:1fr;gap:10px}
+  .rail{display:flex;align-items:baseline;gap:12px}
+  .daylabel{margin-top:0}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<div class="wrap">
+
+  <header>
+    <p class="eyebrow">Daily work log</p>
+    <h1>Tower Rush Build Log</h1>
+    <p class="standfirst">Seven days taking a one-tap stacker from a written build plan to a signed Android package — and the measurements behind each decision.</p>
+    <ul class="meta">
+      <li><b>Phaser-free core</b> + Capacitor 8</li>
+      <li>World <b>720 × 1520</b></li>
+      <li><b>13</b> storefront sprites</li>
+      <li>APK <b>7.09 MB</b></li>
+      <li>Span <b>6 – 13 Sep 2026</b></li>
+    </ul>
+    <p class="readnote">Days here are <strong>phases of work</strong>, not calendar days — the build ran in compressed bursts across the span above. Set real dates against each entry before submitting. Every figure in the findings rows was measured during the work, not estimated afterwards.</p>
+  </header>
+
+  <main class="log">
+
+    <!-- ================= DAY 1 ================= -->
+    <article class="day">
+      <div class="rail">
+        <div class="daynum">01</div>
+        <div class="daylabel">Core rules</div>
+      </div>
+      <div class="body">
+        <h2>Arithmetic before any pixels</h2>
+        <p class="theme">core/TowerRules.ts · Vitest-style assertions</p>
+        <p>Read the build plan and adopted its one architectural rule: <strong>the game rules import nothing</strong> — not the engine, not a service, not a DOM type. <code>resolve()</code> takes numbers and returns numbers. That buys a test suite that runs in milliseconds, difficulty tuning in a plain script, and a port that is one file of arithmetic rather than a rewrite.</p>
+        <p>Implemented the slice maths: perfect-stack tolerance, overlap as the intersection of two spans, and the offcut geometry for the falling debris. Then turned the plan's edge-case table into <strong>executable assertions</strong> rather than transcribed prose — ten cases, each checked against three invariants.</p>
+        <div class="findings">
+          <div class="fhead">Verified</div>
+          <div class="frow"><span>Edge cases passing (containment, width conservation, offcut non-overlap)</span><b>10 / 10</b></div>
+          <div class="frow"><span>Float-precision case: tap at 60.30000000001 resolves to</span><b>x 30.200 · w 139.800</b></div>
+          <div class="frow"><span>Fairness floor — a miss is <code>ovW &lt;= MIN_WIDTH</code>, not <code>&lt;= 0</code></span><b>20 px</b></div>
+        </div>
+        <p>That last line looks like a boundary condition and is really a feel decision: ending a run on a 20&nbsp;px sliver reads as fair, ending it on a 0.4&nbsp;px hairline reads as a bug.</p>
+        <div class="tags"><span class="tag ship">Core loop specified</span></div>
+      </div>
+    </article>
+
+    <!-- ================= DAY 2 ================= -->
+    <article class="day">
+      <div class="rail">
+        <div class="daynum">02</div>
+        <div class="daylabel">Screens</div>
+      </div>
+      <div class="body">
+        <h2>Every screen, then a change of direction</h2>
+        <p class="theme">720 × 1280 mockup · art direction revised mid-flight</p>
+        <p>Built an interactive mockup of the full screen set with the loop playable inside it, so the feel could be judged before committing engine code. One constraint shaped all of them: <strong>during play the entire screen is the tap target</strong>, so nothing touchable may sit on the play surface — sustained accidental ad clicks are an invalid-traffic problem that suspends ad accounts, not merely bad feel.</p>
+        <p>Art direction then changed from abstract blocks to <strong>Tower Rush</strong>, a crane-drop shop stacker, and the mockup was rebuilt against the new reference sheets.</p>
+        <p>Reviewing those sheets raised a scope question worth recording: they contained hearts, a level-complete panel with stars, a shop-upgrade panel, and a four-item crafting resource set. Each implies a mechanic the plan does not have.</p>
+        <div class="findings">
+          <div class="fhead">Scope raised by the art</div>
+          <div class="frow"><span>Lives, refill timer and refill purchase</span><b>+2 d</b></div>
+          <div class="frow"><span>Discrete levels, star goals, map screen</span><b>+5 d</b></div>
+          <div class="frow"><span>Per-shop upgrade tree</span><b>+4 d</b></div>
+          <div class="frow"><span>Dual currency and four crafting resources</span><b>+3 d</b></div>
+          <div class="frow"><span>Day / sunset / night plates — pure art, no mechanics</span><b>+0 d</b></div>
+        </div>
+        <p>Recommendation recorded: ship the endless game with the full art and the sky progression; hold the meta layer for a follow-up built only if retention justifies it. A heart costs an hour of art and a week of refill-timer balancing.</p>
+        <div class="tags"><span class="tag flag">Scope decision escalated</span></div>
+      </div>
+    </article>
+
+    <!-- ================= DAY 3 ================= -->
+    <article class="day">
+      <div class="rail">
+        <div class="daynum">03</div>
+        <div class="daylabel">Art pipeline</div>
+      </div>
+      <div class="body">
+        <h2>Cutting usable sprites out of the sheets</h2>
+        <p class="theme">Alpha-channel slicing · Pillow</p>
+        <p>Sliced the supplied sheets into individual sprites by analysing the alpha channel rather than assuming a fixed grid — the layouts were irregular and a grid would have clipped. Extracted thirteen storefronts, the logo lockup, the parchment sign, the lamp post and three city plates.</p>
+        <p>Three defects surfaced during extraction, each found by measurement rather than by eye:</p>
+        <div class="findings">
+          <div class="fhead">Extraction defects, found and corrected</div>
+          <div class="frow"><span>Shop pairs touched — no transparent column between them; split at the alpha valley where coverage collapsed</span><b>≈150 → 10 px</b></div>
+          <div class="frow"><span>First strip crop baked the caption text into the sprites</span><b>7 affected</b></div>
+          <div class="frow"><span>Logo crop caught the sheet's panel header bar, top and bottom</span><b>13 + 10 rows</b></div>
+        </div>
+        <p>Measuring every storefront also exposed a contradiction in the reference material worth flagging rather than quietly resolving: the standalone sprites are <strong>portrait</strong>, but the gameplay screen drew the stacked shops <strong>landscape</strong> at roughly 2:1.</p>
+        <div class="findings">
+          <div class="fhead">Shop aspect, all thirteen measured</div>
+          <div class="frow"><span>Range, width-to-height</span><b>0.72 – 0.89</b></div>
+          <div class="frow"><span>Mean</span><b>0.79</b></div>
+          <div class="frow"><span>Implied by the gameplay reference</span><b>≈2.0</b></div>
+        </div>
+        <p>Built to the sprites, since those are the shipping art, and recorded that matching the reference density would require redrawing landscape — vertical squashing does not survive the slicing.</p>
+        <div class="tags"><span class="tag fixed">3 defects corrected</span><span class="tag flag">Reference conflict recorded</span></div>
+      </div>
+    </article>
+
+    <!-- ================= DAY 4 ================= -->
+    <article class="day">
+      <div class="rail">
+        <div class="daynum">04</div>
+        <div class="daylabel">The game</div>
+      </div>
+      <div class="body">
+        <h2>A responsive build, and the stacking bug</h2>
+        <p class="theme">Single-file game · canvas + DOM overlay</p>
+        <p>Built the playable game around one layout rule: <strong>the world is always 720 units wide and its height is whatever the device gives</strong>. Every UI size is expressed in world units through a single CSS variable, so a phone, a tablet and a desktop are identically proportioned with no separate breakpoints. Past a 0.62 aspect the stage letterboxes to a portrait column rather than stretching.</p>
+        <p>The sky changes in chapters as the tower climbs — a settled stretch of one plate, then a short cross-fade into the next — which turns the background into the clearest progress signal in the game.</p>
+        <p>The significant bug of the day: stacked shops showed a visible gap. The cause was that each sprite includes a <strong>roof topper</strong> — a coffee cup, a pretzel, a stack of books — so stacking on the full sprite box meant every shop rested on the topper of the one below, with the transparent space either side reading as a gap.</p>
+        <div class="findings">
+          <div class="fhead">Topper as a share of sprite height</div>
+          <div class="frow"><span>Largest (bank — pediment and coin)</span><b>33.7 %</b></div>
+          <div class="frow"><span>Typical</span><b>19 – 26 %</b></div>
+          <div class="frow"><span>Smallest (wine store — flat parapet)</span><b>0.3 %</b></div>
+          <div class="frow"><span>Adjacent block tops after the fix, exactly one BLOCK_H apart</span><b>921 → 681</b></div>
+        </div>
+        <p>Fixed by splitting each sprite: the <strong>body</strong> fills the block box exactly, the <strong>topper</strong> overhangs above it and is covered by the shop stacked on top — which is precisely what the gameplay reference shows. Slicing is a horizontal 3-slice, so the outer thirds hold their scale and a narrowed shop keeps its doorway and planters instead of distorting.</p>
+        <div class="tags"><span class="tag fixed">Stacking gap resolved</span><span class="tag ship">Responsive on any device</span></div>
+      </div>
+    </article>
+
+    <!-- ================= DAY 5 ================= -->
+    <article class="day">
+      <div class="rail">
+        <div class="daynum">05</div>
+        <div class="daylabel">Android</div>
+      </div>
+      <div class="body">
+        <h2>Packaging, and three toolchain faults</h2>
+        <p class="theme">Capacitor 8 · Gradle · Android SDK 35</p>
+        <p>Wrapped the game in a Capacitor project and added the Android platform. The build failed three times before succeeding, each for a different environmental reason — all worth recording because none are in any documentation:</p>
+        <div class="findings">
+          <div class="fhead">Build blockers</div>
+          <div class="frow"><span>Gradle 8.11.1 supports up to JDK 23; the machine runs JDK 24 — bumped the wrapper</span><b>→ 8.14.3</b></div>
+          <div class="frow"><span><code>local.properties</code> written with unescaped backslashes — switched to forward slashes</span><b>path unresolved</b></div>
+          <div class="frow"><span>Machine sets <code>NoDefaultCurrentDirectoryInExePath</code>, so <code>call gradlew.bat</code> never resolves</span><b>= 1</b></div>
+          <div class="frow"><span>Build script saved with Unix line endings, which <code>cmd.exe</code> mishandles</span><b>0 CRLF</b></div>
+        </div>
+        <p>The package was then verified rather than assumed — an APK that builds is not evidence that the right content is inside it.</p>
+        <div class="findings">
+          <div class="fhead">Package verification</div>
+          <div class="frow"><span>Game HTML inside the APK, checked by hash against source</span><b>MD5 match</b></div>
+          <div class="frow"><span>Signed (v1 debug) · package · label</span><b>com.dhruv.towerrush</b></div>
+          <div class="frow"><span>targetSdk / minSdk</span><b>35 / 23</b></div>
+          <div class="frow"><span>Size · launcher icon densities</span><b>5.55 MB · 20</b></div>
+        </div>
+        <div class="tags"><span class="tag ship">Installable APK produced</span><span class="tag flag">Debug-signed — not Play-ready</span></div>
+      </div>
+    </article>
+
+    <!-- ================= DAY 6 ================= -->
+    <article class="day">
+      <div class="rail">
+        <div class="daynum">06</div>
+        <div class="daylabel">Playtest</div>
+      </div>
+      <div class="body">
+        <h2>Five defects from real device testing</h2>
+        <p class="theme">Reported on device · each traced to a cause</p>
+        <p>Testing on hardware produced five reports. Each was diagnosed to a specific cause rather than patched at the symptom:</p>
+        <div class="findings">
+          <div class="fhead">Defects fixed</div>
+          <div class="frow"><span><strong>Garbled text.</strong> No <code>&lt;meta charset&gt;</code>, so the server defaulted to windows-1252 and every multi-byte glyph shattered. Added it and removed all non-ASCII from markup and code</span><b>mojibake</b></div>
+          <div class="frow"><span><strong>Blurred buttons.</strong> A 168&nbsp;px bitmap face drawn at 558 device px on a 1080/dpr3 phone; source icons only ≈40&nbsp;px native, so no re-export helps. Rebuilt the face in CSS and the glyphs as SVG</span><b>3.3× upscale</b></div>
+          <div class="frow"><span><strong>Abrupt ending.</strong> The missed shop faded to nothing instead of falling, and the camera pulled back on the same frame</span><b>0.71 s fade</b></div>
+          <div class="frow"><span><strong>Best score looked frozen.</strong> The HUD showed <code>max(best, score)</code>, so on a first run it simply mirrored the score. Now shows the standing record, or NEW BEST</span><b>display only</b></div>
+          <div class="frow"><span><strong>Skins unreachable from Game Over.</strong> All screen layers share one z-index, so DOM order decides, and the Game Over layer sits after Skins — it rendered behind and its dim swallowed the taps</span><b>z-index 10</b></div>
+        </div>
+        <p>The ending is now staged so the fall is actually watched: the camera holds still for <strong>0.62&nbsp;s</strong>, the shop clears the screen at <strong>1.29&nbsp;s</strong>, and the score panel arrives at <strong>1.75&nbsp;s</strong>. Ordinary slice offcuts keep their gentle fade; only the fatal one is preserved.</p>
+        <p>One fix introduced a bug of its own, caught by testing the flow rather than the change: re-rendering the skins grid re-entered the open routine and discarded the "return here" target, dropping the player to the menu instead of back to Game Over.</p>
+        <div class="tags"><span class="tag fixed">5 defects resolved</span><span class="tag fixed">Regression caught in test</span></div>
+      </div>
+    </article>
+
+    <!-- ================= DAY 7 ================= -->
+    <article class="day">
+      <div class="rail">
+        <div class="daynum">07</div>
+        <div class="daylabel">Platform</div>
+      </div>
+      <div class="body">
+        <h2>Reviewing the asset and analytics platform</h2>
+        <p class="theme">PanScienceInnovation / Game-Dev · main</p>
+        <p>Cloned and read through the platform repository. Four components: an Express and PostgreSQL backend, a React admin dashboard, the original Flutter and Flame match-3 client, and a Phaser integration for a game living outside the repo — with Docker Compose, nginx and certbot for deployment.</p>
+        <p>The recent migrations are the substance of the repo, and they generalise it away from being one match-3 game:</p>
+        <div class="findings">
+          <div class="fhead">Schema direction</div>
+          <div class="frow"><span><code>010</code> — games registry; assets, collections and sessions scoped by game</span><b>ships empty</b></div>
+          <div class="frow"><span><code>011</code> — interaction types widened past the match-3 vocabulary</span><b>+4 types</b></div>
+          <div class="frow"><span><code>012</code> — slots, with a partial unique index enforcing one active asset per slot per game</span><b>replaces "newest wins"</b></div>
+          <div class="frow"><span>Feature branches ahead of <code>main</code></span><b>0 of 4</b></div>
+        </div>
+        <p>Two things to raise. The README still describes the project as a single Candy Crush platform, which no longer matches the schema. And <code>GET /api/collections</code> returns 500 without an <code>order</code> parameter — <code>order.toLowerCase()</code> is called on an undefined value.</p>
+        <p>The brick-breaker integration is the clearest artefact in the repo and reads as the template for adding any game: rewrite the sprite table before the loader runs, match by asset name, <strong>fail open</strong> so a downed backend leaves the built-in art untouched, and never introduce a texture key the game does not already have. Tower Rush is the same shape — a self-contained page inside a Capacitor package — so that path applies directly.</p>
+        <div class="tags"><span class="tag flag">2 issues raised</span><span class="tag ship">Integration path identified</span></div>
+      </div>
+    </article>
+
+  </main>
+
+  <section class="close">
+    <h2>Where it ended</h2>
+    <dl class="tally">
+      <div><dt>Playable build</dt><dd>Shipped <em>· responsive, any device</em></dd></div>
+      <div><dt>Android package</dt><dd>7.09 MB <em>· debug-signed</em></dd></div>
+      <div><dt>Storefront sprites</dt><dd>13 <em>· collectable deck</em></dd></div>
+      <div><dt>Defects fixed</dt><dd>11 <em>· each traced to cause</em></dd></div>
+      <div><dt>Core rule tests</dt><dd>10 / 10 <em>· still green</em></dd></div>
+      <div><dt>Open decisions</dt><dd>2 <em>· scope, shop aspect</em></dd></div>
+    </dl>
+    <p><strong>Carried forward.</strong> The package is debug-signed, so it is shareable but not acceptable to Play — that needs a keystore and a release bundle. Two decisions remain with the owner: whether the meta layer implied by the art sheets is in scope, and whether the shop art is redrawn landscape to match the gameplay reference's density. Neither blocks play.</p>
+  </section>
+
+</div>
